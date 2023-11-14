@@ -114,7 +114,7 @@ const dataModel = JSON.parse(`
             ]
         },
         {
-            "name": "User",
+            "name": "User1",
             "fields": [
                 {
                     "type": "text",
@@ -182,6 +182,14 @@ const dataModel = JSON.parse(`
                     "table": "User",
                     "linkField": "name",
                     "helptext": "Link to the attendee's user profile."
+                },
+                {
+                    "type": "link-table",
+                    "name": "session",
+                    "label": "Session",
+                    "table": "Session",
+                    "linkField": "sessionName",
+                    "helptext": "Link to the session."
                 }
             ]
         }
@@ -197,9 +205,11 @@ const dataModelIssues = [];
 const nodes = dataModel.tables.map((table) => table.name);
 console.log("nodes", nodes);
 
-// relationship errors
 dataModel.tables.forEach((table) => {
+  const adjListEntry = [];
+
   // For each table, get its neighbours, check if they exist
+  // From this, create an adjacency list, this represents the data model as a graph data structure
   const rel = {
     sourceTable: table.name,
     linkFields: table.fields.filter((field) =>
@@ -207,8 +217,45 @@ dataModel.tables.forEach((table) => {
     ),
   };
 
-  adjacencyList.push(rel.linkFields.map((irel) => nodes.indexOf(irel.table)));
+  rel.linkFields.forEach((irel) => {
+    if (!nodes.includes(irel.table)) {
+      dataModelIssues.push({
+        message: `Table "${irel.table}" referenced by field "${irel.name}" in source table "${rel.sourceTable}" does not exist.`,
+        level: "error",
+      });
+    } else {
+      // table exists, maybe target field does not exist
+      const targetTable = dataModel.tables.find(
+        (table) => table.name === irel.table
+      );
+      if (
+        irel?.linkField &&
+        !targetTable.fields.map((field) => field.name).includes(irel.linkField)
+      ) {
+        dataModelIssues.push({
+          message: `Field "${irel.linkField}" referenced by field "${irel.name}" in source table "${rel.sourceTable}" does not exist.`,
+          level: "error",
+        });
+      }
+    }
+
+    if (irel.table === rel.sourceTable) {
+      dataModelIssues.push({
+        message: `Table "${rel.sourceTable}" is linked to itself.`,
+        level: "error",
+      });
+    }
+
+    idx = nodes.indexOf(irel.table);
+    if (idx >= 0) {
+      adjListEntry.push(nodes.indexOf(irel.table));
+    }
+  });
+
+  adjacencyList.push(adjListEntry);
 });
+
+console.log(dataModelIssues);
 
 console.log("adjList", adjacencyList);
 
@@ -231,3 +278,66 @@ const dfs = (adjList, x) => {
 };
 
 console.log("dfs", dfs(adjacencyList, 0));
+
+// Test reachability, create warnings for unreachable nodes
+const reachableNodes = new Array(nodes.length).fill(false);
+nodes.forEach((node) => {
+  const reachable = dfs(adjacencyList, nodes.indexOf(node));
+  if (reachable.length > 1)
+    // ensure when starting at a node, add reachable if it has more than 1 neighbour
+    reachable.forEach((r) => (reachableNodes[r] = true));
+});
+
+console.log(reachableNodes);
+
+reachableNodes.forEach((reachable, i) => {
+  if (!reachable) {
+    dataModelIssues.push({
+      message: `Table ${nodes[i]} has no relationships with other nodes.`,
+      level: "warning",
+    });
+  }
+});
+
+console.log("dfs", dfs(adjacencyList, 0));
+
+console.log(dataModelIssues);
+
+// get all the paths that are a cycle in the graph
+const getCycles = (adjList) => {
+  let visited = [];
+  let stack = [];
+  let cycles = [];
+
+  const dfsLoop = (adjList, x) => {
+    visited.push(x);
+    stack.push(x);
+
+    adjList[x].forEach((node) => {
+      if (!visited.includes(node)) {
+        dfsLoop(adjList, node);
+      } else if (stack.includes(node)) {
+        // a cycle exists, add error
+        cycles.push([...stack, node]);
+      }
+    });
+
+    stack.pop();
+  };
+
+  dfsLoop(adjList, 0);
+
+  return cycles;
+};
+
+const cyclePaths = getCycles(adjacencyList);
+cyclePaths.forEach((cyclePath) => {
+  dataModelIssues.push({
+    message: `Cycle detected: ${cyclePath
+      .map((node) => nodes[node])
+      .join(" -> ")}`,
+    level: "error",
+  });
+});
+
+console.log(dataModelIssues);
