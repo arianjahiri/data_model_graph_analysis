@@ -274,7 +274,7 @@ const detectDataModelIssues = (dataModel) => {
   });
 
   reachableNodes.forEach((reachable, i) => {
-    if (!reachable) {
+    if (!reachable && nodes[i] !== "User") {
       dataModelIssues.push({
         message: `Table ${nodes[i]} has no relationships with other nodes.`,
         level: "warning",
