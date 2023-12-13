@@ -1,191 +1,172 @@
 const dataModel = JSON.parse(`
 {
-    "tables": [
-        {
-            "name": "Event",
-            "fields": [
-                {
-                    "type": "text",
-                    "name": "eventName",
-                    "label": "Event Name",
-                    "helptext": "Enter the name of the event."
-                },
-                {
-                    "type": "rich-text",
-                    "name": "description",
-                    "label": "Description",
-                    "helptext": "Provide a detailed description of the event."
-                },
-                {
-                    "type": "text",
-                    "name": "location",
-                    "label": "Location",
-                    "helptext": "Specify the location where the event will take place."
-                },
-                {
-                    "type": "date-only",
-                    "name": "startDate",
-                    "label": "Start Date",
-                    "helptext": "Select the start date of the event."
-                },
-                {
-                    "type": "date-only",
-                    "name": "endDate",
-                    "label": "End Date",
-                    "helptext": "Select the end date of the event."
-                },
-                {
-                    "type": "rich-text",
-                    "name": "additionalInformation",
-                    "label": "Additional Information",
-                    "helptext": "Include any additional information about the event."
-                },
-                {
-                    "type": "single-image",
-                    "name": "image",
-                    "label": "Event Image",
-                    "helptext": "Upload an image for the event."
-                },
-                {
-                    "type": "sub-table",
-                    "name": "sessions",
-                    "label": "Sessions",
-                    "table": "Session"
-                }
-            ]
-        },
-        {
-            "name": "Session",
-            "fields": [
-                {
-                    "type": "text",
-                    "name": "sessionName",
-                    "label": "Session Name",
-                    "helptext": "Enter the name of the session."
-                },
-                {
-                    "type": "rich-text",
-                    "name": "description",
-                    "label": "Description",
-                    "helptext": "Provide a detailed description of the session."
-                },
-                {
-                    "type": "text",
-                    "name": "sessionLocation",
-                    "label": "Location",
-                    "helptext": "Specify the location where the session will take place."
-                },
-                {
-                    "type": "date-only",
-                    "name": "date",
-                    "label": "Date",
-                    "helptext": "Select the date of the session."
-                },
-                {
-                    "type": "time-only",
-                    "name": "startTime",
-                    "label": "Start Time",
-                    "helptext": "Select the start time of the session."
-                },
-                {
-                    "type": "time-only",
-                    "name": "endTime",
-                    "label": "End Time",
-                    "helptext": "Select the end time of the session."
-                },
-                {
-                    "type": "single-image",
-                    "name": "image",
-                    "label": "Session Image",
-                    "helptext": "Upload an image for the session."
-                },
-                {
-                    "type": "sub-table",
-                    "name": "sessionSpeakers",
-                    "label": "Session Speakers",
-                    "table": "SessionSpeaker"
-                },
-                {
-                    "type": "sub-table",
-                    "name": "sessionAttendees",
-                    "label": "Session Attendees",
-                    "table": "SessionAttendee"
-                }
-            ]
-        },
-        {
-            "name": "User",
-            "fields": [
-                {
-                    "type": "text",
-                    "name": "name",
-                    "label": "Name",
-                    "helptext": "Enter the user's full name."
-                },
-                {
-                    "type": "text",
-                    "name": "title",
-                    "label": "Title",
-                    "helptext": "Enter the user's professional title."
-                },
-                {
-                    "type": "single-image",
-                    "name": "photo",
-                    "label": "Photo",
-                    "helptext": "Upload a profile photo of the user."
-                },
-                {
-                    "type": "text",
-                    "name": "organization",
-                    "label": "Organization",
-                    "helptext": "Enter the name of the organization the user is affiliated with."
-                },
-                {
-                    "type": "email-address",
-                    "name": "email",
-                    "label": "Email Address",
-                    "helptext": "Enter the user's email address."
-                },
-                {
-                    "type": "selection",
-                    "name": "role",
-                    "label": "Role",
-                    "options": [
-                        "Event Organizer",
-                        "Speaker",
-                        "Attendee"
-                    ],
-                    "helptext": "Select the user's role within the app."
-                }
-            ]
-        },
-        {
-            "name": "SessionSpeaker",
-            "fields": [
-                {
-                    "type": "link-table",
-                    "name": "speaker",
-                    "label": "Speaker",
-                    "table": "User",
-                    "linkField": "name",
-                    "helptext": "Link to the speaker's user profile."
-                }
-            ]
-        },
-        {
-            "name": "SessionAttendee",
-            "fields": [
-                {
-                    "type": "link-table",
-                    "name": "attendee",
-                    "label": "Attendee",
-                    "table": "User",
-                    "linkField": "name",
-                    "helptext": "Link to the attendee's user profile."
-                }
-            ]
-        }
-    ]
+  "tables": [
+      {
+          "name": "User",
+          "fields": [
+              {
+                  "type": "text",
+                  "name": "name",
+                  "label": "Name",
+                  "helptext": "Enter the full name of the user."
+              },
+              {
+                  "type": "email-address",
+                  "name": "email",
+                  "label": "Email Address",
+                  "helptext": "Enter the user's email address."
+              },
+              {
+                  "type": "single-image",
+                  "name": "photo",
+                  "label": "Profile Photo",
+                  "helptext": "Upload the user's profile photo."
+              },
+              {
+                  "type": "selection",
+                  "name": "role",
+                  "label": "Role",
+                  "helptext": "Select the user's role within the app.",
+                  "options": [
+                      "Vehicle Owner",
+                      "Maintenance Staff"
+                  ]
+              }
+          ]
+      },
+      {
+          "name": "Vehicle",
+          "fields": [
+              {
+                  "type": "text",
+                  "name": "make",
+                  "label": "Make",
+                  "helptext": "Enter the make of the vehicle."
+              },
+              {
+                  "type": "text",
+                  "name": "model",
+                  "label": "Model",
+                  "helptext": "Enter the model of the vehicle."
+              },
+              {
+                  "type": "text",
+                  "name": "registrationNumber",
+                  "label": "Registration Number",
+                  "helptext": "Enter the vehicle's registration number."
+              },
+              {
+                  "type": "link-table",
+                  "name": "owner",
+                  "label": "Owner",
+                  "helptext": "Select the owner of the vehicle.",
+                  "table": "User",
+                  "linkField": "name"
+              },
+              {
+                  "type": "sub-table",
+                  "name": "maintenanceRecords",
+                  "label": "Maintenance Records",
+                  "helptext": "List of maintenance records for the vehicle.",
+                  "table": "Maintenance Record"
+              }
+          ]
+      },
+      {
+          "name": "Maintenance Record",
+          "fields": [
+              {
+                  "type": "date-time",
+                  "name": "dateOfService",
+                  "label": "Date of Service",
+                  "helptext": "Enter the date and time of the maintenance service."
+              },
+              {
+                  "type": "link-table",
+                  "name": "vehicle",
+                  "label": "Vehicle",
+                  "helptext": "Select the vehicle that was serviced.",
+                  "table": "Vehicle",
+                  "linkField": "registrationNumber"
+              },
+              {
+                  "type": "rich-text",
+                  "name": "serviceDetails",
+                  "label": "Service Details",
+                  "helptext": "Enter the details of the maintenance service."
+              },
+              {
+                  "type": "sub-table",
+                  "name": "maintenanceParts",
+                  "label": "Maintenance Parts",
+                  "helptext": "List of parts used in the maintenance service.",
+                  "table": "Maintenance Parts"
+              }
+          ]
+      },
+      {
+          "name": "Part",
+          "fields": [
+              {
+                  "type": "text",
+                  "name": "partNumber",
+                  "label": "Part Number",
+                  "helptext": "Enter the part number."
+              },
+              {
+                  "type": "text",
+                  "name": "name",
+                  "label": "Name",
+                  "helptext": "Enter the name of the part."
+              },
+              {
+                  "type": "currency",
+                  "name": "cost",
+                  "label": "Cost",
+                  "helptext": "Enter the cost of the part.",
+                  "unit": "dollar",
+                  "units": "dollars"
+              }
+          ]
+      },
+      {
+          "name": "Maintenance Parts",
+          "fields": [
+              {
+                  "type": "link-table",
+                  "name": "maintenanceRecord",
+                  "label": "Maintenance Record",
+                  "helptext": "Link to the maintenance record.",
+                  "table": "Maintenance Record",
+                  "linkField": "dateOfService"
+              },
+              {
+                  "type": "link-table",
+                  "name": "part",
+                  "label": "Part",
+                  "helptext": "Select the part that was replaced or used.",
+                  "table": "Part",
+                  "linkField": "partNumber"
+              },
+              {
+                  "type": "number",
+                  "name": "quantity",
+                  "label": "Quantity",
+                  "helptext": "Enter the quantity of the part used.",
+                  "unit": "piece",
+                  "units": "pieces"
+              },
+              {
+                  "type": "currency",
+                  "name": "partCostAtTimeOfService",
+                  "label": "Part Cost at Time of Service",
+                  "helptext": "Enter the cost of the part at the time of service.",
+                  "unit": "dollar",
+                  "units": "dollars"
+              }
+          ]
+      }
+  ]
 }
 `);
 
@@ -284,7 +265,7 @@ const detectDataModelIssues = (dataModel) => {
 
   // get all the paths that are a cycle in the graph
   // Get Cycles is a variation of the DFS algorithm
-  const getCycles = (adjList) => {
+  const getCycles = (adjList, start) => {
     let visited = [];
     let stack = [];
     let cycles = [];
@@ -305,12 +286,15 @@ const detectDataModelIssues = (dataModel) => {
       stack.pop();
     };
 
-    dfsLoop(adjList, 0);
+    dfsLoop(adjList, start);
 
     return cycles;
   };
 
-  const cyclePaths = getCycles(adjacencyList);
+  // get all the cycles in the graph, must do DFS starting from all nodes, since a cycle could start from any node and no order in nodes is guaranteed
+  const cyclePaths = nodes
+    .map((node) => getCycles(adjacencyList, nodes.indexOf(node)))
+    .flat();
   cyclePaths.forEach((cyclePath) => {
     dataModelIssues.push({
       message: `Cycle detected: ${cyclePath
@@ -322,3 +306,6 @@ const detectDataModelIssues = (dataModel) => {
 
   return dataModelIssues;
 };
+
+const issues = detectDataModelIssues(dataModel);
+console.log(issues);
